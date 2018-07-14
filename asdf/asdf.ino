@@ -1,3 +1,5 @@
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 #include <Arduino.h>
 #include <Ethernet2.h>
 #include <Thingplus.h>
@@ -6,14 +8,18 @@
 #include <Time.h>
 
 #define RELESE 0
+#define DEBUGE 1
 
 #if defined(ARDUINO_ARCH_SAMD) // Atmel ARM Cortex core based MCU series
 // Required for Serial on Zero based boards
 #define Serial SERIAL_PORT_USBVIRTUAL
 #endif
 
-int ledPin = 13;
 int sensorPin = 0;
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal_I2C lcd(rs, en, d4, d5, d6, d7);
+
 int period = 20;
 
 double alpha = 0.75;
@@ -33,12 +39,14 @@ void setup ()
   Serial.begin (9600);
   Serial.println("asdfg");
   Ethernet.begin(mac);
-
+  lcd.begin(16, 2);
+  lcd.backlight();
   char st[64];
   IPAddress ip = Ethernet.localIP();
   Serial.print("[INFO] IP:");
   Serial.println(ip);
   Thingplus.begin(ethernetClient, mac, api);
+
   Thingplus.connect();
 }
 time_t current;
@@ -59,6 +67,7 @@ void loop ()
   Serial.println (value);
   oldValue = value;
   delay (period);            // Wait 20 mSec
+    lcd.print(value);
   if (millis() - 20000 > ot) {
     ot = millis();
     Thingplus.gatewayStatusPublish(true, 30);
@@ -66,7 +75,7 @@ void loop ()
     Thingplus.valuePublish(light, value);
   }
 #endif
-
+#if DEBUGE
   if (Serial.available()) {
     Thingplus.gatewayStatusPublish(true, 30);
     int Ser = analogRead(A0);
@@ -74,6 +83,6 @@ void loop ()
     Thingplus.sensorStatusPublish(light, true, 30);
     Serial.println(Thingplus.valuePublish(light, Ser));
   }
+#endif
 
 }
-
