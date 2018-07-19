@@ -17,8 +17,7 @@
 
 int sensorPin = 0;
 
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
-LiquidCrystal_I2C lcd(rs, en, d4, d5, d6, d7);
+LiquidCrystal_I2C lcd(0x27,16,2);
 
 int period = 20;
 
@@ -39,7 +38,7 @@ void setup ()
   Serial.begin (9600);
   Serial.println("asdfg");
   Ethernet.begin(mac);
-  lcd.begin(16, 2);
+  lcd.begin();
   lcd.backlight();
   char st[64];
   IPAddress ip = Ethernet.localIP();
