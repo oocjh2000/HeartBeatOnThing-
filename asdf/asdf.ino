@@ -28,9 +28,9 @@ int period = 20;
 double alpha = 0.75;
 double change = 0.0;
 
-byte mac[6] = {0x00, 0x08, 0xDC, 0x51, 0xA6, 0x2B};
-const char *api = "eh_YAczhVICGGZnntSs8qiuNPi4=";
-const char *light = "light-0008dc51a62b-0";
+byte mac[6] = {0x00, 0x08, 0xDC, 0x00, 0x00, 0x00};//Wiznet Inthernet default Mac 0008dc
+const char *api = "";
+const char *light = "";
 static EthernetClient ethernetClient;
 
 Timer t;
